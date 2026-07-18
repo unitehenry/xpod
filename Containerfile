@@ -12,14 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xvfb \
         x11-apps \
         xauth \
-        x11vnc \
-    && add-apt-repository ppa:xtradeb/apps -y \
-    && apt-get update \
-    && apt-get install -y chromium \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
-RUN useradd -m -U -s /bin/bash chrome
+        x11vnc
 
 COPY <<'EOF' /start.sh
 #!/bin/bash
@@ -39,9 +32,7 @@ x11vnc -display $DISPLAY \
         -repeat \
         &
 
-CHROMIUM_WIDTH=${RESOLUTION%%x*}
-CHROMIUM_HEIGHT=${RESOLUTION#*x}; CHROMIUM_HEIGHT=${CHROMIUM_HEIGHT%%x*}
-su -c "chromium --disable-gpu --start-maximized --window-size=${CHROMIUM_WIDTH},${CHROMIUM_HEIGHT} --force-device-scale-factor=1" chrome
+/app.sh
 
 wait
 EOF
