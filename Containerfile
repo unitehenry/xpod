@@ -39,7 +39,9 @@ x11vnc -display $DISPLAY \
         -repeat \
         &
 
-su -c "chromium --disable-gpu --start-maximized --window-size=1920,1080 --force-device-scale-factor=1" chrome
+CHROMIUM_WIDTH=${RESOLUTION%%x*}
+CHROMIUM_HEIGHT=${RESOLUTION#*x}; CHROMIUM_HEIGHT=${CHROMIUM_HEIGHT%%x*}
+su -c "chromium --disable-gpu --start-maximized --window-size=${CHROMIUM_WIDTH},${CHROMIUM_HEIGHT} --force-device-scale-factor=1" chrome
 
 wait
 EOF
