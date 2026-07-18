@@ -7,27 +7,27 @@ ENV DEBIAN_FRONTEND=noninteractive \
     VNC_PASSWORD=vncpass \
     RESOLUTION=1920x1080x24
 
-# Install X11 utilities + x11vnc
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    xvfb \
-    x11-apps \
-    xauth \
-    x11vnc \
+        software-properties-common \
+        xvfb \
+        x11-apps \
+        xauth \
+        x11vnc \
+    && add-apt-repository ppa:xtradeb/apps -y \
+    && apt-get update \
+    && apt-get install -y chromium \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# Create a simple startup script
+RUN useradd -m -U -s /bin/bash chrome
+
 COPY <<'EOF' /start.sh
 #!/bin/bash
 set -e
 
-echo "Starting Xvfb (virtual display)..."
 Xvfb $DISPLAY -screen 0 $RESOLUTION -ac -nolisten tcp -extension RANDR +extension GLX &
 
-echo "Waiting for Xvfb to start..."
 sleep 2
-
-echo "Starting x11vnc..."
 
 x11vnc -display $DISPLAY \
         -forever \
@@ -39,10 +39,8 @@ x11vnc -display $DISPLAY \
         -repeat \
         &
 
-echo "Starting test app (xclock)..."
-xclock &
+su -c "chromium --disable-gpu" chrome
 
-echo "VNC server ready on port $VNC_PORT"
 wait
 EOF
 
