@@ -32,6 +32,11 @@ x11vnc -display $DISPLAY \
         -repeat \
         &
 
+if [ ! -f /app.sh ]; then
+    echo "/app.sh was not mounted to image"
+    exit 1
+fi
+
 /app.sh
 
 wait
