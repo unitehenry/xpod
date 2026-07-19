@@ -3,4 +3,4 @@ set -e
 
 mkdir -p chromium-lib
 
-podman run -it --rm -v ./chromium-lib:/var/lib/chromium -p 5900:5900 -p 9222:9222 xpod-chromium
+podman run --cap-add=SYS_ADMIN -it --rm -v ./chromium-lib:/var/lib/chromium -p 5900:5900 -p 9222:9222 xpod-chromium
