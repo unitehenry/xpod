@@ -44,3 +44,7 @@ The `xpod-chromium` image accepts an optional volume mount for porting chromium 
 ```bash
 podman run -v ./chromium-lib:/var/lib/chromium xpod-chromium
 ```
+
+## Additional Resources
+
+- [neko](https://github.com/m1k1o/neko)
