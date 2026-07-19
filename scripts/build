@@ -3,4 +3,3 @@ set -e
 
 podman build -t xpod-base .
 podman build -t xpod-chromium -f apps/chromium/Containerfile apps/chromium
-podman run -it --rm -p 5900:5900 xpod-chromium
