@@ -14,7 +14,7 @@ This `build` script will build the xpod base image and apps (currently only chro
 
 ### App Support
 
-If you'd like to run another app on top of the `xbase-image`, the only requirement is that you mount a `/app.sh` to the root of the image.
+If you'd like to run another app on top of the `xpod-base` image, the only requirement is that you mount a `/app.sh` to the root of the image.
 
 ```Dockerfile
 COPY <<'EOF' /app.sh
