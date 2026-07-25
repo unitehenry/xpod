@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman
+
+      - name: Build
+        run: scripts/build
+
+      - name: Start xpod-chromium
+        run: |
+          mkdir -p chromium-lib
+          podman run -d --rm \
+            --cap-add=SYS_ADMIN \
+            -v ./chromium-lib:/var/lib/chromium \
+            -e VNC_PASSWORD="vncpass" \
+            -p 5900:5900 \
+            -p 9222:9222 \
+            --name xpod-chromium \
+            xpod-chromium
+          sleep 8
+
+      - name: Probe VNC
+        run: |
+          PROBE_OUTPUT=$(podman run \
+            --rm \
+            -i \
+            --add-host=host.docker.internal:host-gateway \
+            alpine sh -c "apk add --no-cache netcat-openbsd >/dev/null 2>&1; nc -w 3 host.docker.internal 5900" | tail -n 1 | tr -d '\r')
+
+          [ "$PROBE_OUTPUT" = "RFB 003.008" ] || { echo "Assertion failed: got '$PROBE_OUTPUT'"; exit 1; }
+
+      - name: Probe CDP
+        run: curl http://127.0.0.1:9222/json/version
+
+      - name: Cleanup
+        if: always()
+        run: podman stop xpod-chromium || true
