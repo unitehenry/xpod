@@ -45,3 +45,29 @@ jobs:
       - name: Cleanup
         if: always()
         run: docker stop xpod-chromium || true
+
+    publish:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        packages: write
+      steps:
+        - name: Log in to the Container registry
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Checkout
+          uses: actions/checkout@v5
+
+        - name: Build Base
+          run: docker build -t xpod-base -f base/Containerfile base
+
+        - name: Build and Push
+          uses: docker/build-push-action@v6
+          with:
+            context: ./apps/chromium
+            push: true
+            tags: ${{ github.actor }}/xpod-chromium:latest
