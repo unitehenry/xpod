@@ -37,6 +37,13 @@ EOF
 RUN chmod +x /app.sh
 ```
 
+## Environment Variables
+
+|Variable|Default|Description|
+|:-:|:-:|:-:|
+|`VNC_PASSWORD`|`vncpass`|Password to use for connecting via VNC|
+
+
 ## Chromium Profiles
 
 The `xpod-chromium` image accepts an optional volume mount for porting chromium profiles after use.
