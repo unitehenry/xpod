@@ -11,18 +11,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install podman
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y podman
-
       - name: Build
-        run: scripts/build
+        run: |
+          docker build -t xpod-base -f base/Containerfile base
+          docker build -t xpod-chromium -f apps/chromium/Containerfile apps/chromium
 
       - name: Start xpod-chromium
         run: |
           mkdir -p chromium-lib
-          podman run -d --rm \
+          docker run -d --rm \
             --cap-add=SYS_ADMIN \
             -v ./chromium-lib:/var/lib/chromium \
             -e VNC_PASSWORD="vncpass" \
@@ -34,7 +31,7 @@ jobs:
 
       - name: Probe VNC
         run: |
-          PROBE_OUTPUT=$(podman run \
+          PROBE_OUTPUT=$(docker run \
             --rm \
             -i \
             --add-host=host.docker.internal:host-gateway \
@@ -47,4 +44,4 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: podman stop xpod-chromium || true
+        run: docker stop xpod-chromium || true
