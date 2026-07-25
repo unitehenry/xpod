@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 set -e
 
-podman build -t xpod-base .
+podman build -t xpod-base -f base/Containerfile base
 podman build -t xpod-chromium -f apps/chromium/Containerfile apps/chromium
