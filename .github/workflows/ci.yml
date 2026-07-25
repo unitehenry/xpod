@@ -62,13 +62,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Build Base
-        run: docker build -t xpod-base -f base/Containerfile base
+      - name: Build and push base
+        uses: docker/build-push-action@v6
+        with:
+          file: ./base/Containerfile
+          context: ./base
+          push: true
+          tags: ghcr.io/${{ github.actor }}/xpod-base:latest
 
-      - name: Build and Push
+      - name: Build and push chromium
         uses: docker/build-push-action@v6
         with:
           file: ./apps/chromium/Containerfile
           context: ./apps/chromium
           push: true
-          tags: ${{ github.actor }}/xpod-chromium:latest
+          tags: ghcr.io/${{ github.actor }}/xpod-chromium:latest
+          build-contexts: |
+            xpod-base=docker-image://ghcr.io/${{ github.actor }}/xpod-base:latest
