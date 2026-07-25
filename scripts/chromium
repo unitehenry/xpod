@@ -3,4 +3,13 @@ set -e
 
 mkdir -p chromium-lib
 
-podman run --cap-add=SYS_ADMIN -it --rm -v ./chromium-lib:/var/lib/chromium -p 5900:5900 -p 9222:9222 xpod-chromium
+podman run \
+  -it \
+  --rm \
+  --cap-add=SYS_ADMIN \
+  -v ./chromium-lib:/var/lib/chromium \
+  -e VNC_PORT=5901 \
+  -e VNC_PASSWORD="vncpass" \
+  -p 5900:5901 `# vnc port` \
+  -p 9222:9222 `# cdp port` \
+  xpod-chromium
