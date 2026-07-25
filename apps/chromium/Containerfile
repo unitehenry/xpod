@@ -9,7 +9,7 @@ RUN add-apt-repository ppa:xtradeb/apps -y \
 
 RUN useradd -m -U -s /bin/bash chrome
 
-COPY <<'EOF' /app.sh
+RUN cat > /app.sh <<'EOF'
 #!/bin/bash
 set -e
 

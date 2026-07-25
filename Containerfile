@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xauth \
         x11vnc
 
-COPY <<'EOF' /start.sh
+RUN cat > /start.sh <<'EOF'
 #!/bin/bash
 set -e
 
