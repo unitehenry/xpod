@@ -10,4 +10,4 @@ rm -rf /var/lib/chromium/profile/Singleton*
 CHROMIUM_WIDTH=${RESOLUTION%%x*}
 CHROMIUM_HEIGHT=${RESOLUTION#*x}; CHROMIUM_HEIGHT=${CHROMIUM_HEIGHT%%x*}
 
-su -c "chromium --disable-gpu --start-maximized --window-size=${CHROMIUM_WIDTH},${CHROMIUM_HEIGHT} --force-device-scale-factor=1 --remote-debugging-port=9222 --user-data-dir=/var/lib/chromium/profile" chrome
+su -c "chromium --disable-gpu --start-maximized --window-size=${CHROMIUM_WIDTH},${CHROMIUM_HEIGHT} --force-device-scale-factor=1 --remote-debugging-port=9222 --remote-debugging-address=0.0.0.0 --user-data-dir=/var/lib/chromium/profile" chrome
